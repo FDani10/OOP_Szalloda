@@ -1,32 +1,34 @@
 import tkcalendar as Calendar
 
 class Szoba:
-    def __init__(self, ar, szobaszam):
+    def __init__(self, id, ar, szobaszam):
+        self.id = id
         self.ar = ar
         self.szobaszam = szobaszam
 
 class EgyagyasSzoba(Szoba):
-    def __init__(self, ar, szobaszam):
-        super().__init__(ar, szobaszam)
+    def __init__(self, id, ar, szobaszam):
+        super().__init__(id, ar, szobaszam)
         self.kulonlegesseg = []
         self.picture = None
         self.rating = None
         self.rating_num = None
 
 class KetagyasSzoba(Szoba):
-    def __init__(self, ar, szobaszam):
-        super().__init__(ar, szobaszam)
+    def __init__(self, id, ar, szobaszam):
+        super().__init__(id, ar, szobaszam)
         self.kulonlegesseg = []
         self.picture = None
         self.rating = None
         self.rating_num = None
 
 class Szalloda:
-    def __init__(self,nev):
+    def __init__(self, id, nev, x_cor, y_cor):
+        self.id = id
         self.nev = nev
         self.szobak = []
-        self.x_cor = None
-        self.y_cor = None
+        self.x_cor = x_cor
+        self.y_cor = y_cor
 
 
 
@@ -37,7 +39,7 @@ class Foglalas:
         self.szobaszam = szobaszam
 
 
-#From StackOverflow
+#From StackOverflow (loptam, mert foggalmam sincs hogyan kellett volna)
 class MyCalendar(Calendar.Calendar):
     def __init__(self, master=None, **kw):
         self._disabled_dates = []

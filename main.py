@@ -15,10 +15,24 @@ sajatfoglalasok = []
 
 def login():
     if(username.get() != "" and password.get() != ""):
-        welcomeBack = tk.Label(canvas,bg="#41a0e8",text=f"Üdvözlünk újra, {username.get()}",font='Ariel 20 bold')
-        welcomeBack.place(x=100,y=50,width=300,height=60)
-        user_name_lbl.configure(text=username.get())
-        main.after(3000,upTheCurtain)
+        felhasznalok_txt = open("./verysecret/felhasznalok.txt","r")
+        felhasznalok_txt.readline()
+        vanilyen = False
+        print(username.get())
+        print(password.get())
+        for x in felhasznalok_txt:
+            sorok = x.split(';')
+            un = sorok[0]
+            pw = sorok[1][:-1]
+            if un == username.get() and pw == password.get():
+                vanilyen = True
+        if vanilyen == True:
+            welcomeBack = tk.Label(canvas,bg="#41a0e8",text=f"Üdvözlünk újra, {username.get()}",font='Ariel 20 bold')
+            welcomeBack.place(x=100,y=50,width=300,height=60)
+            user_name_lbl.configure(text=username.get())
+            main.after(3000,upTheCurtain)
+        else:
+            print("Nem található felhasználó!")
     else:
         print("HIBA!")
 
@@ -336,6 +350,10 @@ kul1.place(x=278,y=106,width=200,height=110)
 c_x4 = -500
 canvas_5 = tk.Canvas(main,bg="#8abee6",width=500,height=500)
 canvas_5.place(x=-500,y=0)
+
+button_prof_back = tk.Button(canvas_5,text="Vissza",command=login)
+button_prof_back.place(x=150,y=320,width=200,height=30)
+
 #endregion
 
 #region Belépő képernyő

@@ -36,77 +36,54 @@ def upload():
 
     pics = picSizer()
 
-    #Szobák száma és ára random legenerálása (Őszintén nem akartam egyesével kitalálni nekik árakat és számokat, ezért random)
+    #Egyágyas szobák, és kétágyas szobák beolvasása .txt fileból (id, szobaszám, ár, értékelés, értékelés_szám, különlegességek)
+    i = 0
     egyagyasSzobak = []
-    szobaszamok = []
-    for i in range(0,8):
-        r_ar = random.randint(10000,100000)
-        r_szam = random.randint(100,999)
-        while r_szam in szobaszamok:
-            r_szam = random.randint(100,999)
-        szobaszamok.append(r_szam)
-        egyagyasSzobak.append(EgyagyasSzoba(r_ar,r_szam))
+    egyagyas_txt = open("./verysecret/egyagyas.txt", "r")
+    egyagyas_txt.readline()
+    for line in egyagyas_txt:
+        sorok = line.split(';')
+        egyagyasSzobak.append(EgyagyasSzoba(sorok[0],sorok[3],sorok[2]))
+        egyagyasSzobak[i].kulonlegesseg.append(kulonlegessegek[int(sorok[6])])
+        egyagyasSzobak[i].kulonlegesseg.append(kulonlegessegek[int(sorok[7])])
+        egyagyasSzobak[i].kulonlegesseg.append(kulonlegessegek[int(sorok[8])])
+        egyagyasSzobak[i].kulonlegesseg.append(kulonlegessegek[int(sorok[9])])
+        egyagyasSzobak[i].kulonlegesseg.append(kulonlegessegek[int(sorok[10])])
+        egyagyasSzobak[i].rating = str(sorok[4])
+        egyagyasSzobak[i].rating_num = str(sorok[5])
+        i = i + 1
+    egyagyas_txt.close()
 
+    i = 0
     ketagyasSzobak = []
-    for i in range(0,8):
-        r_ar = random.randint(10000,100000)
-        r_szam = random.randint(100,999)
-        while r_szam in szobaszamok:
-            r_szam = random.randint(100,999)
-        szobaszamok.append(r_szam)
-        ketagyasSzobak.append(KetagyasSzoba(r_ar,r_szam))
+    ketagyas_txt = open("./verysecret/ketagyas.txt", "r")
+    ketagyas_txt.readline()
+    for line in ketagyas_txt:
+        sorok = line.split(';')
+        ketagyasSzobak.append(KetagyasSzoba(sorok[0],sorok[3],sorok[2]))
+        ketagyasSzobak[i].kulonlegesseg.append(kulonlegessegek[int(sorok[6])])
+        ketagyasSzobak[i].kulonlegesseg.append(kulonlegessegek[int(sorok[7])])
+        ketagyasSzobak[i].kulonlegesseg.append(kulonlegessegek[int(sorok[8])])
+        ketagyasSzobak[i].kulonlegesseg.append(kulonlegessegek[int(sorok[9])])
+        ketagyasSzobak[i].kulonlegesseg.append(kulonlegessegek[int(sorok[10])])
+        ketagyasSzobak[i].rating = str(sorok[4])
+        ketagyasSzobak[i].rating_num = str(sorok[5])
+        i = i + 1
+    ketagyas_txt.close()
 
-
-    #Különlegességek hozzáadása random (Itt se akartam mindegyiknek megadni egyesével, szóval random)
+    #Képek hozzárendelése a szobákhoz
     for i in range(0,len(egyagyasSzobak)):
-        voltak = []
-        for j in range(0,5):
-            r = random.randint(0,len(kulonlegessegek)-1)
-            while kulonlegessegek[r] in voltak:
-                r = random.randint(0,len(kulonlegessegek)-1)
-            egyagyasSzobak[i].kulonlegesseg.append(kulonlegessegek[r])
-            voltak.append(kulonlegessegek[r])
-
+        egyagyasSzobak[i].picture = pics[i]
     for i in range(0,len(ketagyasSzobak)):
-        voltak = []
-        for j in range(0,5):
-            r = random.randint(0,len(kulonlegessegek)-1)
-            while kulonlegessegek[r] in voltak:
-                r = random.randint(0,len(kulonlegessegek)-1)
-            ketagyasSzobak[i].kulonlegesseg.append(kulonlegessegek[r])
-            voltak.append(kulonlegessegek[r])
+        ketagyasSzobak[i].picture = pics[i+8]
 
-    #Képek hozzárendelése a szobákhoz (random)
-    numlist = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
-    for i in range(0,len(egyagyasSzobak)):
-        r = random.randint(0,len(numlist)-1)
-        egyagyasSzobak[i].picture = pics[numlist[r]-1]
-        numlist.pop(r)
-    for i in range(0,len(ketagyasSzobak)):
-        r = random.randint(0,len(numlist)-1)
-        ketagyasSzobak[i].picture = pics[numlist[r]-1]
-        numlist.pop(r)
-
-    #Random értékelés hozzáadása
-    for i in range(0,len(egyagyasSzobak)):
-        r1 = random.randint(7,9)
-        r2 = random.randint(0,9)
-        egyagyasSzobak[i].rating = f"{r1}.{r2}"
-        r3 = random.randint(1000,3000)
-        egyagyasSzobak[i].rating_num = r3
-    for i in range(0,len(ketagyasSzobak)):
-        r1 = random.randint(7,9)
-        r2 = random.randint(0,9)
-        ketagyasSzobak[i].rating = f"{r1}.{r2}"
-        r3 = random.randint(1000,3000)
-        ketagyasSzobak[i].rating_num = r3
-
-    #Szállodákhoz szobák rendelése
+    #Szállodák beolvasása txt fileból, és szobák rendelése hozzájuk
     szallodak = []
-    szallodak.append(Szalloda("Generus Hotel"))
-    szallodak.append(Szalloda("Crystal Cove Resort & Spa"))
-    szallodak.append(Szalloda("The One Star Motel"))
-    szallodak.append(Szalloda("Margaret Island Hotel"))
+    ketagyas_txt = open("./verysecret/szalloda.txt", "r")
+    ketagyas_txt.readline()
+    for line in ketagyas_txt:
+        sorok = line.split(';')
+        szallodak.append(Szalloda(sorok[0],sorok[1],float(sorok[2]),float(sorok[3])))
 
     szallodak[0].szobak.append(egyagyasSzobak[0])
     szallodak[0].szobak.append(egyagyasSzobak[1])
@@ -128,30 +105,14 @@ def upload():
     szallodak[3].szobak.append(ketagyasSzobak[6])
     szallodak[3].szobak.append(ketagyasSzobak[7])
 
-    #Szállodákhoz tartozó koordináta
-    szallodak[0].x_cor = 46.9171
-    szallodak[0].y_cor = 18.0716
-    szallodak[1].x_cor = 46.6703
-    szallodak[1].y_cor = 21.0842
-    szallodak[2].x_cor = 48.1036
-    szallodak[2].y_cor = 20.7746
-    szallodak[3].x_cor = 47.3809
-    szallodak[3].y_cor = 19.2157
-
     #Random foglalások létrehozása
     foglalasok = []
-    for szn in range(0,4):
-        for rn in range(0,4):
-            fidopontok = []
-            for fn in range(0,10):
-                rm = random.randint(datetime.now().month,datetime.now().month+2)
-                rd = random.randint(1,30)
-                while (rm == datetime.now().month and rd <= datetime.now().day) or datetime(2024,rm,rd) in fidopontok:
-                    rm = random.randint(datetime.now().month,datetime.now().month+2)
-                    rd = random.randint(1,30)
-                fidopontok.append(datetime(2024,rm,rd))
-                foglalasok.append(Foglalas(datetime(2024,rm,rd),szallodak[szn],szallodak[szn].szobak[rn].szobaszam))
-
+    foglalas_txt = open("./verysecret/foglalas.txt", "r")
+    foglalas_txt.readline()
+    for line in foglalas_txt:
+        sorok = line.split(';')
+        date_sor = sorok[0].split('-')
+        foglalasok.append(Foglalas(datetime(int(date_sor[0]),int(date_sor[1]),int(date_sor[2])),szallodak[int(sorok[1])-1],sorok[2][:-1]))
 
     return egyagyasSzobak, ketagyasSzobak, szallodak, foglalasok
 print("kesz")
