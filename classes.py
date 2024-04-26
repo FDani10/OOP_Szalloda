@@ -33,10 +33,11 @@ class Szalloda:
 
 
 class Foglalas:
-    def __init__(self, idopont, szalloda, szobaszam):
+    def __init__(self, idopont, szalloda, szobaszam, foglalo_nev):
         self.idopont = idopont
         self.szalloda = szalloda
         self.szobaszam = szobaszam
+        self.foglalo_nev = foglalo_nev
 
 
 #From StackOverflow (loptam, mert foggalmam sincs hogyan kellett volna)

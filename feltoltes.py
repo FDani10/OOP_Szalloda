@@ -105,14 +105,13 @@ def upload():
     szallodak[3].szobak.append(ketagyasSzobak[6])
     szallodak[3].szobak.append(ketagyasSzobak[7])
 
-    #Random foglalások létrehozása
+    #Foglalások beolvasása txt fájlból
     foglalasok = []
     foglalas_txt = open("./verysecret/foglalas.txt", "r")
     foglalas_txt.readline()
     for line in foglalas_txt:
         sorok = line.split(';')
         date_sor = sorok[0].split('-')
-        foglalasok.append(Foglalas(datetime(int(date_sor[0]),int(date_sor[1]),int(date_sor[2])),szallodak[int(sorok[1])-1],sorok[2][:-1]))
+        foglalasok.append(Foglalas(datetime(int(date_sor[0]),int(date_sor[1]),int(date_sor[2])),szallodak[int(sorok[1])-1],sorok[2],[sorok[3][:-1]]))
 
     return egyagyasSzobak, ketagyasSzobak, szallodak, foglalasok
-print("kesz")

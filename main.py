@@ -5,21 +5,19 @@ from feltoltes import upload
 from PIL import Image, ImageTk
 import datetime
 import tkintermapview
+import ctypes
 
 
 main = tk.Tk()
 main.geometry("500x500")
 
 egyagyasSzobak, ketagyasSzobak, szallodak, foglalasok = upload()
-sajatfoglalasok = []
 
 def login():
     if(username.get() != "" and password.get() != ""):
         felhasznalok_txt = open("./verysecret/felhasznalok.txt","r")
         felhasznalok_txt.readline()
         vanilyen = False
-        print(username.get())
-        print(password.get())
         for x in felhasznalok_txt:
             sorok = x.split(';')
             un = sorok[0]
@@ -32,9 +30,9 @@ def login():
             user_name_lbl.configure(text=username.get())
             main.after(3000,upTheCurtain)
         else:
-            print("Nem található felhasználó!")
+            ctypes.windll.user32.MessageBoxW(0, "Nem található ilyen felhasználó!", "Hiba!", 1)
     else:
-        print("HIBA!")
+        ctypes.windll.user32.MessageBoxW(0, "Töltse ki az összes mezőt!", "Hiba!", 1)
 
 def upTheCurtain():
     global block_y
@@ -149,12 +147,11 @@ def dateSelectedVerifier(hotel, room):
     caldate = datetime.datetime(int(date[2])+2000,int(date[0]),int(date[1]))
     if to_integer(caldate) > to_integer(datetime.datetime.now()):
         cal.disable_date(datetime.date(caldate.year, caldate.month, caldate.day))
-        sajatfoglalasok.append(Foglalas(datetime.datetime(caldate.year,caldate.month,caldate.day),hotel,room.szobaszam))
-        foglalasok.append(Foglalas(datetime.datetime(caldate.year,caldate.month,caldate.day),hotel,room.szobaszam))
+        foglalasok.append(Foglalas(datetime.datetime(caldate.year,caldate.month,caldate.day),hotel,room.szobaszam,username.get()))
         slideRightRoom()
-        print("Very nice. Great success")
+        ctypes.windll.user32.MessageBoxW(0, "Sikeresen lefoglalta a szobát!", "Siker!", 1)
     else:
-        print("Nem lehetséges előző dátumokra foglalást kezdeményezni")
+        ctypes.windll.user32.MessageBoxW(0, "Nem lehetséges előző/mai dátumra foglalni!", "Hiba!", 1)
 
 def getProfilePage():
     global c_x
@@ -199,8 +196,8 @@ roundedbutton["activebackground"] = "#8abee6"
 roundedbutton["border"] = "0"
 roundedbutton.place(x=30,y=100, width=207,height=152)
 
-hotel_1_name = tk.Label(canvas_2,text="The One Star Motel",font='Arial 12 italic',bg="#8abee6")
-hotel_1_name.place(x=60,y=255)
+hotel_1_name = tk.Label(canvas_2,text=szallodak[0].nev,font='Arial 12 italic',bg="#8abee6")
+hotel_1_name.place(x=70,y=255)
 
 
 image=Image.open('./pics/hotel1.jpg')
@@ -212,8 +209,8 @@ roundedbutton["activebackground"] = "#8abee6"
 roundedbutton["border"] = "0"
 roundedbutton.place(x=270,y=100, width=207,height=152)
 
-hotel_1_name = tk.Label(canvas_2,text="Generus Hotel",font='Arial 12 italic',bg="#8abee6")
-hotel_1_name.place(x=300,y=255)
+hotel_1_name = tk.Label(canvas_2,text=szallodak[1].nev,font='Arial 12 italic',bg="#8abee6")
+hotel_1_name.place(x=330,y=255)
 
 
 image=Image.open('./pics/hotel2.jpg')
@@ -225,8 +222,8 @@ roundedbutton["activebackground"] = "#8abee6"
 roundedbutton["border"] = "0"
 roundedbutton.place(x=30,y=300, width=207,height=152)
 
-hotel_1_name = tk.Label(canvas_2,text="Crystal Cove Resort & Spa",font='Arial 12 italic',bg="#8abee6")
-hotel_1_name.place(x=30,y=455)
+hotel_1_name = tk.Label(canvas_2,text=szallodak[2].nev,font='Arial 12 italic',bg="#8abee6")
+hotel_1_name.place(x=70,y=455)
 
 
 image=Image.open('./pics/hotel3.jpg')
@@ -238,8 +235,8 @@ roundedbutton["activebackground"] = "#8abee6"
 roundedbutton["border"] = "0"
 roundedbutton.place(x=270,y=300, width=207,height=152)
 
-hotel_1_name = tk.Label(canvas_2,text="Margaret Island Hotel",font='Arial 12 italic',bg="#8abee6")
-hotel_1_name.place(x=300,y=455)
+hotel_1_name = tk.Label(canvas_2,text=szallodak[3].nev,font='Arial 12 italic',bg="#8abee6")
+hotel_1_name.place(x=320,y=455)
 #endregion
 
 #region Kiválasztott hotel képernyő
