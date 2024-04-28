@@ -1,5 +1,6 @@
 from classes import Foglalas
 from classes import MyCalendar
+from classes import Felhasznalo
 import tkinter as tk
 from feltoltes import upload
 from PIL import Image, ImageTk
@@ -22,8 +23,8 @@ def login():
             if un == username.get() and pw == password.get():
                 vanilyen = True
         if vanilyen == True:
-            welcomeBack = tk.Label(canvas,bg="#41a0e8",text=f"Üdvözlünk újra, {username.get()}",font='Ariel 20 bold')
-            welcomeBack.place(x=100,y=50,width=300,height=60)
+            welcomeBack = tk.Label(canvas,bg="#2694E8",text=f"Üdvözlünk újra, {username.get()}",font='Ariel 15 bold',fg="white")
+            welcomeBack.place(x=100,y=140,width=300,height=40)
             user_name_lbl.configure(text=username.get())
             main.after(3000,upTheCurtain)
         else:
@@ -239,136 +240,169 @@ def lemondas(fogl):
     ctypes.windll.user32.MessageBoxW(0, f"Sikeresen lemondta az alábbi foglalását:\n{fogl.szalloda.nev}\n{fogl.szobaszam}\n{fogl.idopont.year}-{fogl.idopont.month}-{fogl.idopont.day}", "Siker!", 0)
     SlideBackProfile()
 
+def getRegPage(event=None):
+    global clx
+    global crx
+    clx -= 10
+    crx -= 10
+    canvas.place(x=clx,y=0)
+    canvas_reg.place(x=crx,y=0)
+    if crx != 0:
+        main.after(10,getRegPage)
+    
+def getLogPage(event=None):
+    global clx
+    global crx
+    clx += 10
+    crx += 10
+    canvas.place(x=clx,y=0)
+    canvas_reg.place(x=crx,y=0)
+    if clx != 0:
+        main.after(10,getLogPage)
+
+def register():
+    if(reg_fel.get() != "" and reg_pass.get() != "" and reg_pass_again.get() != ""):
+        if(reg_pass.get() == reg_pass_again.get()):
+            egyedi = True
+            for i in range(0,len(felhasznalok)):
+                if felhasznalok[i].username == reg_fel.get():
+                    egyedi = False
+            if egyedi:
+                f = open("./verysecret/felhasznalok.txt", "a")
+                f.write(f"{reg_fel.get()};{reg_pass.get()};\n")
+                f.close()
+                felhasznalok.append(Felhasznalo(reg_fel.get(),reg_pass.get()))
+                ctypes.windll.user32.MessageBoxW(0, "Sikeres regisztráció!", "Siker!", 0)
+                getLogPage()
+            else:
+                ctypes.windll.user32.MessageBoxW(0, "Már létezik ilyen nevű felhasználó!", "Hiba!", 0)
+        else:
+            ctypes.windll.user32.MessageBoxW(0, "Nem egyezik a jelszó!", "Hiba!", 0)
+    else:
+        ctypes.windll.user32.MessageBoxW(0, "Töltse ki az összes mezőt!", "Hiba!", 0)
+
+
 #region Szállodák képernyő
-canvas_2 = tk.Canvas(main,bg="#8abee6",width=500,height=500)
+canvas_2 = tk.Canvas(main,bg="#2694E8",width=500,height=500)
 canvas_2.place(x=0,y=0)
-hotel_kiv = tk.Label(canvas_2,bg="#8abee6",text="Válasszon hotelt",font='Helvetica 25 bold italic')
+hotel_kiv = tk.Label(canvas_2,bg="#2694E8",text="Válasszon hotelt",font=('Segoe UI Black',24))
 hotel_kiv.place(x=100,y=20,width=300,height=60)
 
 image_p=Image.open('./pics/profpicround.jpg')
 img_p=image_p.resize((60, 60))
 my_img_p=ImageTk.PhotoImage(img_p)
 user_btn = tk.Button(canvas_2, image=my_img_p, command=doProfilePage)
-user_btn["bg"] = "#8abee6"
-user_btn["activebackground"] = "#8abee6"
+user_btn["bg"] = "#2694E8"
+user_btn["activebackground"] = "#2694E8"
 user_btn["border"] = "0"
 user_btn.place(x=420,y=10,width=60,height=60)
 
-user_name_lbl = tk.Label(canvas_2,bg="#8abee6",justify="center")
+user_name_lbl = tk.Label(canvas_2,bg="#2694E8",justify="center")
 user_name_lbl.place(x=430,y=70)
 
-image=Image.open('./pics/onestar-modified.png')
+image=Image.open('./pics/h1_round.png')
 img=image.resize((207, 152))
 my_img1=ImageTk.PhotoImage(img)
 roundedbutton = tk.Button(canvas_2, image=my_img1, command=lambda: chosenHotel(0))
-roundedbutton["bg"] = "#8abee6"
-roundedbutton["activebackground"] = "#8abee6"
+roundedbutton["bg"] = "#2694E8"
+roundedbutton["activebackground"] = "#2694E8"
 roundedbutton["border"] = "0"
 roundedbutton.place(x=30,y=100, width=207,height=152)
 
-hotel_1_name = tk.Label(canvas_2,text=szallodak[0].nev,font='Arial 12 italic',bg="#8abee6")
+hotel_1_name = tk.Label(canvas_2,text=szallodak[0].nev,font='Arial 12 bold',bg="#2694E8")
 hotel_1_name.place(x=70,y=255)
 
 
-image=Image.open('./pics/hotel1.jpg')
+image=Image.open('./pics/h2_round.png')
 img=image.resize((207, 152))
 my_img2=ImageTk.PhotoImage(img)
 roundedbutton = tk.Button(canvas_2, image=my_img2, command=lambda: chosenHotel(1))
-roundedbutton["bg"] = "#8abee6"
-roundedbutton["activebackground"] = "#8abee6"
+roundedbutton["bg"] = "#2694E8"
+roundedbutton["activebackground"] = "#2694E8"
 roundedbutton["border"] = "0"
 roundedbutton.place(x=270,y=100, width=207,height=152)
 
-hotel_1_name = tk.Label(canvas_2,text=szallodak[1].nev,font='Arial 12 italic',bg="#8abee6")
-hotel_1_name.place(x=330,y=255)
+hotel_1_name = tk.Label(canvas_2,text=szallodak[1].nev,font='Arial 12 bold',bg="#2694E8")
+hotel_1_name.place(x=345,y=255)
 
 
-image=Image.open('./pics/hotel2.jpg')
+image=Image.open('./pics/h3_round.png')
 img=image.resize((207, 152))
 my_img3=ImageTk.PhotoImage(img)
 roundedbutton = tk.Button(canvas_2, image=my_img3, command=lambda: chosenHotel(2))
-roundedbutton["bg"] = "#8abee6"
-roundedbutton["activebackground"] = "#8abee6"
+roundedbutton["bg"] = "#2694E8"
+roundedbutton["activebackground"] = "#2694E8"
 roundedbutton["border"] = "0"
 roundedbutton.place(x=30,y=300, width=207,height=152)
 
-hotel_1_name = tk.Label(canvas_2,text=szallodak[2].nev,font='Arial 12 italic',bg="#8abee6")
-hotel_1_name.place(x=70,y=455)
+hotel_1_name = tk.Label(canvas_2,text=szallodak[2].nev,font='Arial 12 bold',bg="#2694E8")
+hotel_1_name.place(x=75,y=455)
 
 
-image=Image.open('./pics/hotel3.jpg')
+image=Image.open('./pics/h4_round.png')
 img=image.resize((207, 152))
 my_img4=ImageTk.PhotoImage(img)
 roundedbutton = tk.Button(canvas_2, image=my_img4, command=lambda: chosenHotel(3))
-roundedbutton["bg"] = "#8abee6"
-roundedbutton["activebackground"] = "#8abee6"
+roundedbutton["bg"] = "#2694E8"
+roundedbutton["activebackground"] = "#2694E8"
 roundedbutton["border"] = "0"
 roundedbutton.place(x=270,y=300, width=207,height=152)
 
-hotel_1_name = tk.Label(canvas_2,text=szallodak[3].nev,font='Arial 12 italic',bg="#8abee6")
-hotel_1_name.place(x=320,y=455)
+hotel_1_name = tk.Label(canvas_2,text=szallodak[3].nev,font='Arial 12 bold',bg="#2694E8")
+hotel_1_name.place(x=315,y=455)
 #endregion
 
 #region Kiválasztott hotel képernyő
 c_x=0
 c_x2=500
 
-canvas_3 = tk.Canvas(main,bg="#8abee6",width=500,height=500)
+canvas_3 = tk.Canvas(main,bg="#2694E8",width=500,height=500)
 canvas_3.place(x=500,y=0)
 
-image=Image.open('./pics/onestar-modified.png')
-img=image.resize((207, 152))
-my_img5=ImageTk.PhotoImage(img)
-roundedbutton1 = tk.Button(canvas_3, image=my_img5, command=lambda: chosenRoom(0))
-roundedbutton1["bg"] = "#8abee6"
-roundedbutton1["activebackground"] = "#8abee6"
+roundedbutton1 = tk.Button(canvas_3, command=lambda: chosenRoom(0))
+roundedbutton1["bg"] = "#2694E8"
+roundedbutton1["activebackground"] = "#2694E8"
 roundedbutton1["border"] = "0"
-roundedbutton1.place(x=30,y=100, width=207,height=152)
+roundedbutton1.place(x=30,y=50, width=207,height=152)
 
-room_1_name = tk.Label(canvas_3,text="",font='Arial 12 italic',bg="#8abee6")
-room_1_name.place(x=60,y=255)
+room_1_name = tk.Label(canvas_3,text="",font='Arial 12 bold',bg="#2694E8")
+room_1_name.place(x=60,y=205)
 
-
-image=Image.open('./pics/onestar-modified.png')
-img=image.resize((207, 152))
-my_img6=ImageTk.PhotoImage(img)
-roundedbutton2 = tk.Button(canvas_3, image=my_img6, command=lambda: chosenRoom(1))
-roundedbutton2["bg"] = "#8abee6"
-roundedbutton2["activebackground"] = "#8abee6"
+roundedbutton2 = tk.Button(canvas_3, command=lambda: chosenRoom(1))
+roundedbutton2["bg"] = "#2694E8"
+roundedbutton2["activebackground"] = "#2694E8"
 roundedbutton2["border"] = "0"
-roundedbutton2.place(x=270,y=100, width=207,height=152)
+roundedbutton2.place(x=270,y=50, width=207,height=152)
 
-room_2_name = tk.Label(canvas_3,text="",font='Arial 12 italic',bg="#8abee6")
-room_2_name.place(x=300,y=255)
+room_2_name = tk.Label(canvas_3,text="",font='Arial 12 bold',bg="#2694E8")
+room_2_name.place(x=300,y=205)
 
-
-image=Image.open('./pics/onestar-modified.png')
-img=image.resize((207, 152))
-my_img7=ImageTk.PhotoImage(img)
-roundedbutton3 = tk.Button(canvas_3, image=my_img7, command=lambda: chosenRoom(2))
-roundedbutton3["bg"] = "#8abee6"
-roundedbutton3["activebackground"] = "#8abee6"
+roundedbutton3 = tk.Button(canvas_3, command=lambda: chosenRoom(2))
+roundedbutton3["bg"] = "#2694E8"
+roundedbutton3["activebackground"] = "#2694E8"
 roundedbutton3["border"] = "0"
-roundedbutton3.place(x=30,y=300, width=207,height=152)
+roundedbutton3.place(x=30,y=250, width=207,height=152)
 
-room_3_name = tk.Label(canvas_3,text="",font='Arial 12 italic',bg="#8abee6")
-room_3_name.place(x=60,y=455)
+room_3_name = tk.Label(canvas_3,text="",font='Arial 12 bold',bg="#2694E8")
+room_3_name.place(x=60,y=405)
 
-
-image=Image.open('./pics/onestar-modified.png')
-img=image.resize((207, 152))
-my_img8=ImageTk.PhotoImage(img)
-roundedbutton4 = tk.Button(canvas_3, image=my_img8, command=lambda: chosenRoom(3))
-roundedbutton4["bg"] = "#8abee6"
-roundedbutton4["activebackground"] = "#8abee6"
+roundedbutton4 = tk.Button(canvas_3, command=lambda: chosenRoom(3))
+roundedbutton4["bg"] = "#2694E8"
+roundedbutton4["activebackground"] = "#2694E8"
 roundedbutton4["border"] = "0"
-roundedbutton4.place(x=270,y=300, width=207,height=152)
+roundedbutton4.place(x=270,y=250, width=207,height=152)
 
-room_4_name = tk.Label(canvas_3,text="",font='Arial 12 italic',bg="#8abee6")
-room_4_name.place(x=300,y=455)
+room_4_name = tk.Label(canvas_3,text="",font='Arial 12 bold',bg="#2694E8")
+room_4_name.place(x=300,y=405)
 
-btn_c3 = tk.Button(canvas_3,text="VISSZA", command=slideToTheRight)
-btn_c3.place(x=200,y=400)
+image_backbtn=Image.open(f'./pics/widget_bg/visszaBtn.png')
+img_backbtn=image_backbtn.resize((175, 53))
+my_img_backbtn=ImageTk.PhotoImage(img_backbtn)
+back_btn = tk.Button(canvas_3,image=my_img_backbtn,command=slideToTheRight)
+back_btn["bg"] = "#2694E8"
+back_btn["activebackground"] = "#2694E8"
+back_btn["border"] = "0"
+back_btn.place(x=167,y=436)
 #endregion
 
 #region Kiválasztott szoba képernyő
@@ -454,25 +488,94 @@ canvas_foglist.place(x=25,y=150,width=470,height=250)
 
 #region Belépő képernyő
 block_y=0
-canvas = tk.Canvas(main,bg="#41a0e8",width=500,height=500)
+clx = 0
+canvas = tk.Canvas(main,bg="#2694E8",width=500,height=500)
 canvas.place(x=0,y=0)
 
-koszonto = tk.Label(canvas,bg="#41a0e8",text="SZOBAFOGLALÓ",font='Helvetica 25 bold italic')
-koszonto.place(x=100,y=100,width=300,height=60)
+szf1_lbl = tk.Label(canvas,text="Szobafoglaló",font=('Segoe UI Black',44),bg="#2694E8",fg="white")
+szf1_lbl.place(x=64,y=10)
+reg1_lbl = tk.Label(canvas,text="Belépés",font=('Arial',22),bg="#2694E8",fg="white")
+reg1_lbl.place(x=192,y=98)
 
-username_ph = tk.Label(canvas,bg="#41a0e8",text="Felhasználónév:",font='Arial 12 italic')
-username_ph.place(x=110,y=180,width=200,height=20)
-username = tk.Entry(canvas)
-username.place(x=150,y=200,width=200,height=30)
+image_btn=Image.open(f'./pics/widget_bg/entryblue.png')
+img_btn=image_btn.resize((320, 56))
+my_img_btn=ImageTk.PhotoImage(img_btn)
 
-password_ph = tk.Label(canvas,bg="#41a0e8",text="Jelszó:",font='Arial 12 italic')
-password_ph.place(x=75,y=240,width=200,height=20)
-password = tk.Entry(canvas,show="*")
-password.place(x=150,y=260,width=200,height=30)
+lbl11 = tk.Label(canvas,text="Felhasználónév:",fg="white",bg="#2694E8",font=('Ariel',14))
+lbl11.place(x=104,y=183)
+ent_bg1 = tk.Label(canvas,image=my_img_btn,bg="#2694E8")
+ent_bg1.place(x=85,y=211,width=320,height=56)
+username = tk.Entry(canvas,font=('Ariel',15),bg="#86BEE9",border=0)
+username.place(x=105,y=215,width=250,height=40)
 
-button = tk.Button(canvas,text="Belépés",command=login)
-button.place(x=150,y=320,width=200,height=30)
+lbl21 = tk.Label(canvas,text="Jelszó:",fg="white",bg="#2694E8",font=('Ariel',14))
+lbl21.place(x=104,y=263)
+ent_bg21 = tk.Label(canvas,image=my_img_btn,bg="#2694E8")
+ent_bg21.place(x=85,y=301,width=320,height=56)
+password = tk.Entry(canvas,font=('Ariel',15),bg="#86BEE9",border=0,show="*")
+password.place(x=105,y=305,width=250,height=40)
+
+alr1 = tk.Label(canvas,text="Még nincs fiókod?",font=('Ariel',12),fg="white",bg="#2694E8")
+alr1.place(x=143,y=400)
+login_lbl1 = tk.Label(canvas,text="Regisztrálj",font=('Ariel',12),fg="#002979",bg="#2694E8")
+login_lbl1.bind("<Button-1>",getRegPage)
+login_lbl1.place(x=275,y=400)
+
+image21=Image.open(f'./pics/widget_bg/belepesBtn.png')
+img21=image21.resize((175, 53))
+my_img21=ImageTk.PhotoImage(img21)
+reg_btn1 = tk.Button(canvas,image=my_img21,command=login)
+reg_btn1["bg"] = "#2694E8"
+reg_btn1["activebackground"] = "#2694E8"
+reg_btn1["border"] = "0"
+reg_btn1.place(x=167,y=436)
 #endregion
 
+#region Regisztrálás képernyő
+crx = 500
+canvas_reg = tk.Canvas(main,bg="#2694E8",width=500,height=500)
+canvas_reg.place(x=500,y=0)
+
+szf_lbl = tk.Label(canvas_reg,text="Szobafoglaló",font=('Segoe UI Black',44),bg="#2694E8",fg="white")
+szf_lbl.place(x=64,y=10)
+reg_lbl = tk.Label(canvas_reg,text="Regisztráció",font=('Arial',22),bg="#2694E8",fg="white")
+reg_lbl.place(x=162,y=98)
+
+lbl1 = tk.Label(canvas_reg,text="Felhasználónév:",fg="white",bg="#2694E8",font=('Ariel',14))
+lbl1.place(x=104,y=153)
+ent_bg = tk.Label(canvas_reg,image=my_img_btn,bg="#2694E8")
+ent_bg.place(x=85,y=181,width=320,height=56)
+reg_fel = tk.Entry(canvas_reg,font=('Ariel',15),bg="#86BEE9",border=0)
+reg_fel.place(x=105,y=185,width=250,height=40)
+
+lbl2 = tk.Label(canvas_reg,text="Jelszó:",fg="white",bg="#2694E8",font=('Ariel',14))
+lbl2.place(x=104,y=233)
+ent_bg2 = tk.Label(canvas_reg,image=my_img_btn,bg="#2694E8")
+ent_bg2.place(x=85,y=261,width=320,height=56)
+reg_pass = tk.Entry(canvas_reg,font=('Ariel',15),bg="#86BEE9",border=0,show="*")
+reg_pass.place(x=105,y=265,width=250,height=40)
+
+lbl3 = tk.Label(canvas_reg,text="Jelszó ismét:",fg="white",bg="#2694E8",font=('Ariel',14))
+lbl3.place(x=104,y=313)
+ent_bg3 = tk.Label(canvas_reg,image=my_img_btn,bg="#2694E8")
+ent_bg3.place(x=85,y=341,width=320,height=56)
+reg_pass_again = tk.Entry(canvas_reg,font=('Ariel',15),bg="#86BEE9",border=0,show="*")
+reg_pass_again.place(x=105,y=345,width=250,height=40)
+
+alr = tk.Label(canvas_reg,text="Már van fiókod?",font=('Ariel',12),fg="white",bg="#2694E8")
+alr.place(x=148,y=400)
+login_lbl = tk.Label(canvas_reg,text="Jelentkezz be",font=('Ariel',12),fg="#002979",bg="#2694E8")
+login_lbl.bind("<Button-1>",getLogPage)
+login_lbl.place(x=265,y=400)
+
+image_reg=Image.open(f'./pics/widget_bg/registerBtn.png')
+img_reg=image_reg.resize((175, 53))
+my_img_reg=ImageTk.PhotoImage(img_reg)
+reg_btn = tk.Button(canvas_reg,image=my_img_reg,command=register)
+reg_btn["bg"] = "#2694E8"
+reg_btn["activebackground"] = "#2694E8"
+reg_btn["border"] = "0"
+reg_btn.place(x=167,y=436)
+#endregion
 
 main.mainloop()

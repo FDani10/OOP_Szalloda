@@ -1,5 +1,5 @@
 id;nev;x_cor;y_cor
-1;Generus Hotel;46.9171;18.0716;
+1;One Star Motel;46.9171;18.0716;
 2;Stacio;46.6703;21.0842;
-3;One Star Motel;48.1036;20.7746;
+3;Generus Hotel;48.1036;20.7746;
 4;Margaret Hotel;47.3809;19.2157;

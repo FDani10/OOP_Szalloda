@@ -50,7 +50,6 @@ idopont;szalloda;szobaszam;foglalo_nev
 2024-5-13;2;821;teszt;
 2024-6-6;1;832;teszt;
 2024-6-29;4;396;teszt;
-2024-5-22;3;183;asd;
 2024-6-3;1;278;teszt;
 2024-6-17;2;821;teszt;
 2024-5-1;4;726;teszt;
@@ -188,3 +187,4 @@ idopont;szalloda;szobaszam;foglalo_nev
 2024-6-17;3;123;teszt;
 2024-6-24;1;832;teszt;
 2024-5-10;2;821;teszt;
+2024-5-29;1;247;asd;
