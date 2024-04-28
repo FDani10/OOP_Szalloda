@@ -154,6 +154,40 @@ def dateSelectedVerifier(hotel, room):
         ctypes.windll.user32.MessageBoxW(0, "Nem lehetséges előző/mai dátumra foglalni!", "Hiba!", 1)
 
 def getProfilePage():
+    global v
+    global t
+    v.destroy()
+    t.destroy()
+
+    v = tk.Scrollbar(canvas_foglist)
+    v.pack(side = "right", fill = "y")
+    t = tk.Text(canvas_foglist, width = 30, height = 17, wrap = "none",
+    yscrollcommand = v.set,bg="#8abee6")
+    label_nev.config(text=username.get())
+    van_ilyen = False
+    for i in range(0,len(foglalasok)):
+        if foglalasok[i].foglalo_nev == username.get():
+            btn_lemond = tk.Button(t,text="Lemondás",command=lambda:print(f"{i}"))
+            van_ilyen = True
+            ar = 0
+            for j in range(0,len(foglalasok[i].szalloda.szobak)):
+                if foglalasok[i].szalloda.szobak[j].szobaszam == foglalasok[i].szobaszam:
+                    ar = foglalasok[i].szalloda.szobak[j].ar
+            t.insert("end",f"{foglalasok[i].szalloda.nev} | {foglalasok[i].szobaszam} | {foglalasok[i].idopont.year}-{foglalasok[i].idopont.month}-{foglalasok[i].idopont.day} | {ar} Ft | ")
+            t.window_create("end", window=btn_lemond)
+            t.insert("end", "\n")
+            t.insert("end","\n")
+    if van_ilyen == False:
+        t.config(font="Ariel 15")
+        t.insert("end",f"Nem található foglalás a fiókjához!")
+
+    t.tag_configure("center", justify='center')
+    t.tag_add("center", 1.0, "end")
+    t.config(state="disabled")
+    t.pack(side="top", fill="x")
+
+    v.config(command=t.yview)
+
     global c_x
     global c_x2
     global c_x3
@@ -168,6 +202,22 @@ def getProfilePage():
     canvas_5.place(x=c_x4,y=0)
     if c_x4 != 0:
         main.after(10,getProfilePage)
+
+def SlideBackProfile():
+    global c_x
+    global c_x2
+    global c_x3
+    global c_x4
+    c_x4 -=10
+    c_x3 -= 10
+    c_x2 -= 10
+    c_x -= 10
+    canvas_2.place(x=c_x,y=0)
+    canvas_3.place(x=c_x2,y=0)
+    canvas_4.place(x=c_x3,y=0)
+    canvas_5.place(x=c_x4,y=0)
+    if c_x != 0:
+        main.after(10,SlideBackProfile)
 
 #region Szállodák képernyő
 canvas_2 = tk.Canvas(main,bg="#8abee6",width=500,height=500)
@@ -189,8 +239,8 @@ user_name_lbl.place(x=430,y=70)
 
 image=Image.open('./pics/onestar-modified.png')
 img=image.resize((207, 152))
-my_img=ImageTk.PhotoImage(img)
-roundedbutton = tk.Button(canvas_2, image=my_img, command=lambda: chosenHotel(0))
+my_img1=ImageTk.PhotoImage(img)
+roundedbutton = tk.Button(canvas_2, image=my_img1, command=lambda: chosenHotel(0))
 roundedbutton["bg"] = "#8abee6"
 roundedbutton["activebackground"] = "#8abee6"
 roundedbutton["border"] = "0"
@@ -325,7 +375,7 @@ btn2.place(x=60,y=440,width=135,height=40)
 btn_fog = tk.Button(canvas_4,text="FOGLALÁS",command=dateSelectedVerifier)
 btn_fog.place(x=240,y=414,width=250,height=66)
 
-img = tk.Label(canvas_4,image=my_img)
+img = tk.Label(canvas_4)
 img.place(x=28,y=20,width=245,height=184)
 szobaszam = tk.Label(canvas_4,text="Szobaszám: 420",font="Ariel 13 bold",bg="#8abee6")
 szobaszam.place(x=65,y=209,width=160,height=31)
@@ -348,9 +398,38 @@ c_x4 = -500
 canvas_5 = tk.Canvas(main,bg="#8abee6",width=500,height=500)
 canvas_5.place(x=-500,y=0)
 
-button_prof_back = tk.Button(canvas_5,text="Vissza",command=login)
-button_prof_back.place(x=150,y=320,width=200,height=30)
+canvas_foglist = tk.Canvas(canvas_5)
 
+image=Image.open(f'./pics/profpicround.jpg')
+img_prof=image.resize((80, 80))
+my_img=ImageTk.PhotoImage(img_prof)
+pic_label = tk.Label(canvas_5,image=my_img)
+pic_label["bg"] = "#8abee6"
+pic_label["activebackground"] = "#8abee6"
+pic_label["border"] = "0"
+pic_label.place(x=170,y=10,width=80,height=80)
+
+label_nev = tk.Label(canvas_5,text="Tesztt",font="Ariel 22",bg="#8abee6")
+label_nev.place(x=260,y=35)
+
+label_fogl = tk.Label(canvas_5,text="Foglalások:",font="Ariel 15",bg="#8abee6")
+label_fogl.place(x=30,y=110)
+
+btn2 = tk.Button(canvas_5,text="Vissza",command=SlideBackProfile)
+btn2.place(x=190,y=440,width=120,height=40)
+
+v = tk.Scrollbar(canvas_foglist)
+v.pack(side = "right", fill = "y")
+t = tk.Text(canvas_foglist, width = 30, height = 17, wrap = "none",
+yscrollcommand = v.set,bg="#8abee6")
+van_ilyen = False
+t.tag_configure("center", justify='center')
+t.tag_add("center", 1.0, "end")
+t.config(state="disabled")
+t.pack(side="top", fill="x")
+v.config(command=t.yview)
+canvas_foglist["bg"] = "#8abee6"
+canvas_foglist.place(x=25,y=150,width=470,height=250)
 #endregion
 
 #region Belépő képernyő

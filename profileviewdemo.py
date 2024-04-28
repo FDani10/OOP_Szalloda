@@ -9,13 +9,19 @@ main.configure(background="#8abee6")
 canvas = tk.Canvas(main)
 
 image=Image.open(f'./pics/profpicround.jpg')
-img=image.resize((100, 100))
+img=image.resize((80, 80))
 my_img=ImageTk.PhotoImage(img)
 pic_label = tk.Label(main,image=my_img)
 pic_label["bg"] = "#8abee6"
 pic_label["activebackground"] = "#8abee6"
 pic_label["border"] = "0"
-pic_label.place(x=70,y=30,width=100,height=100)
+pic_label.place(x=170,y=10,width=80,height=80)
+
+label_nev = tk.Label(main,text="Tesztt",font="Ariel 22",bg="#8abee6")
+label_nev.place(x=260,y=35)
+
+label_fogl = tk.Label(main,text="Foglalások:",font="Ariel 15",bg="#8abee6")
+label_fogl.place(x=30,y=110)
   
 v = tk.Scrollbar(canvas)
   
@@ -30,20 +36,26 @@ foglalas_txt.readline()
 
 szalloda_nev = ["Generus Hotel","Stacio","One Star Motel","Margaret Hotel"]
 
+van_ilyen = False
 for line in foglalas_txt:
     btn_text = tk.Button(t,text="Lemondás",command=lambda:print("lemondva"))
     sorok = line.split(';')
-    t.insert("end",f"{szalloda_nev[int(sorok[1])-1]} | {sorok[2]} | {sorok[0]} | 19 500Ft | ")
-    t.window_create("end", window=btn_text)
-    t.insert("end", "\n")
-    t.insert("end","\n")
+    if sorok[3] == "tesztttt\n":
+        van_ilyen = True
+        t.insert("end",f"{szalloda_nev[int(sorok[1])-1]} | {sorok[2]} | {sorok[0]} | 19 500Ft | ")
+        t.window_create("end", window=btn_text)
+        t.insert("end", "\n")
+        t.insert("end","\n")
+
+if van_ilyen == False:
+    t.config(font="Ariel 15")
+    t.insert("end",f"Nem található foglalás a fiókjához!")
   
-  
+
 t.tag_add("center", 1.0, "end")
 t.config(state="disabled")
 t.pack(side="top", fill="x")
-  
-  
+
 v.config(command=t.yview)
 
 canvas["bg"] = "#8abee6"
