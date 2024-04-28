@@ -1,4 +1,6 @@
 nev;jelszo
-asd;asd
-admin;admin
-username;password
+asd;asd;
+admin;admin;
+username;password;
+teszt;teszt;
+fdani;dddd

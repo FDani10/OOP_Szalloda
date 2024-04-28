@@ -39,6 +39,11 @@ class Foglalas:
         self.szobaszam = szobaszam
         self.foglalo_nev = foglalo_nev
 
+class Felhasznalo:
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
+
 
 #From StackOverflow (loptam, mert foggalmam sincs hogyan kellett volna)
 class MyCalendar(Calendar.Calendar):

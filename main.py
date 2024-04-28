@@ -11,17 +11,14 @@ import ctypes
 main = tk.Tk()
 main.geometry("500x500")
 
-egyagyasSzobak, ketagyasSzobak, szallodak, foglalasok = upload()
+egyagyasSzobak, ketagyasSzobak, szallodak, foglalasok, felhasznalok = upload()
 
 def login():
     if(username.get() != "" and password.get() != ""):
-        felhasznalok_txt = open("./verysecret/felhasznalok.txt","r")
-        felhasznalok_txt.readline()
         vanilyen = False
-        for x in felhasznalok_txt:
-            sorok = x.split(';')
-            un = sorok[0]
-            pw = sorok[1][:-1]
+        for x in range(0,len(felhasznalok)):
+            un = felhasznalok[x].username
+            pw = felhasznalok[x].password
             if un == username.get() and pw == password.get():
                 vanilyen = True
         if vanilyen == True:
@@ -30,9 +27,9 @@ def login():
             user_name_lbl.configure(text=username.get())
             main.after(3000,upTheCurtain)
         else:
-            ctypes.windll.user32.MessageBoxW(0, "Nem található ilyen felhasználó!", "Hiba!", 1)
+            ctypes.windll.user32.MessageBoxW(0, "Nem található ilyen felhasználó!", "Hiba!", 0)
     else:
-        ctypes.windll.user32.MessageBoxW(0, "Töltse ki az összes mezőt!", "Hiba!", 1)
+        ctypes.windll.user32.MessageBoxW(0, "Töltse ki az összes mezőt!", "Hiba!", 0)
 
 def upTheCurtain():
     global block_y
@@ -148,12 +145,17 @@ def dateSelectedVerifier(hotel, room):
     if to_integer(caldate) > to_integer(datetime.datetime.now()):
         cal.disable_date(datetime.date(caldate.year, caldate.month, caldate.day))
         foglalasok.append(Foglalas(datetime.datetime(caldate.year,caldate.month,caldate.day),hotel,room.szobaszam,username.get()))
-        slideRightRoom()
-        ctypes.windll.user32.MessageBoxW(0, "Sikeresen lefoglalta a szobát!", "Siker!", 1)
-    else:
-        ctypes.windll.user32.MessageBoxW(0, "Nem lehetséges előző/mai dátumra foglalni!", "Hiba!", 1)
 
-def getProfilePage():
+        f = open("./verysecret/foglalas.txt", "a")
+        f.write(f"{caldate.year}-{caldate.month}-{caldate.day};{hotel.id};{room.szobaszam};{username.get()};\n")
+        f.close()
+
+        slideRightRoom()
+        ctypes.windll.user32.MessageBoxW(0, "Sikeresen lefoglalta a szobát!", "Siker!", 0)
+    else:
+        ctypes.windll.user32.MessageBoxW(0, "Nem lehetséges előző/mai dátumra foglalni!", "Hiba!", 0)
+
+def doProfilePage():
     global v
     global t
     v.destroy()
@@ -167,7 +169,7 @@ def getProfilePage():
     van_ilyen = False
     for i in range(0,len(foglalasok)):
         if foglalasok[i].foglalo_nev == username.get():
-            btn_lemond = tk.Button(t,text="Lemondás",command=lambda:print(f"{i}"))
+            btn_lemond = tk.Button(t,text="Lemondás",command=lambda e = foglalasok[i]:lemondas(e))
             van_ilyen = True
             ar = 0
             for j in range(0,len(foglalasok[i].szalloda.szobak)):
@@ -187,7 +189,9 @@ def getProfilePage():
     t.pack(side="top", fill="x")
 
     v.config(command=t.yview)
+    getProfilePage()
 
+def getProfilePage():
     global c_x
     global c_x2
     global c_x3
@@ -219,6 +223,22 @@ def SlideBackProfile():
     if c_x != 0:
         main.after(10,SlideBackProfile)
 
+def lemondas(fogl):
+    for i in range(0,len(foglalasok)):
+        if foglalasok[i] == fogl:
+            foglalasok.pop(i)
+            break
+
+    with open("./verysecret/foglalas.txt", "r") as f:
+        lines = f.readlines()
+    with open("./verysecret/foglalas.txt", "w") as f:
+        for line in lines:
+            if line != f"{fogl.idopont.year}-{fogl.idopont.month}-{fogl.idopont.day};{fogl.szalloda.id};{fogl.szobaszam};{username.get()};\n":
+                f.write(line)
+    
+    ctypes.windll.user32.MessageBoxW(0, f"Sikeresen lemondta az alábbi foglalását:\n{fogl.szalloda.nev}\n{fogl.szobaszam}\n{fogl.idopont.year}-{fogl.idopont.month}-{fogl.idopont.day}", "Siker!", 0)
+    SlideBackProfile()
+
 #region Szállodák képernyő
 canvas_2 = tk.Canvas(main,bg="#8abee6",width=500,height=500)
 canvas_2.place(x=0,y=0)
@@ -228,7 +248,7 @@ hotel_kiv.place(x=100,y=20,width=300,height=60)
 image_p=Image.open('./pics/profpicround.jpg')
 img_p=image_p.resize((60, 60))
 my_img_p=ImageTk.PhotoImage(img_p)
-user_btn = tk.Button(canvas_2, image=my_img_p, command=getProfilePage)
+user_btn = tk.Button(canvas_2, image=my_img_p, command=doProfilePage)
 user_btn["bg"] = "#8abee6"
 user_btn["activebackground"] = "#8abee6"
 user_btn["border"] = "0"
