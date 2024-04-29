@@ -407,7 +407,7 @@ back_btn.place(x=167,y=436)
 
 #region Kiválasztott szoba képernyő
 c_x3 = 1000
-canvas_4 = tk.Canvas(main,bg="#8abee6",width=500,height=500)
+canvas_4 = tk.Canvas(main,bg="#2694E8",width=500,height=500)
 canvas_4.place(x=1000,y=0)
 
 label = tk.LabelFrame(canvas_4)
@@ -423,33 +423,42 @@ cal = MyCalendar(canvas_4, selectmode='day',
                  day=19)
 cal.place(x=240,y=224)
 
-btn2 = tk.Button(canvas_4,text="Vissza",command=slideRightRoom)
-btn2.place(x=60,y=440,width=135,height=40)
+back_btn2 = tk.Button(canvas_4,text="Vissza",image=my_img_backbtn,command=slideRightRoom)
+back_btn2["bg"] = "#2694E8"
+back_btn2["activebackground"] = "#2694E8"
+back_btn2["border"] = "0"
+back_btn2.place(x=50,y=440)
 
-btn_fog = tk.Button(canvas_4,text="FOGLALÁS",command=dateSelectedVerifier)
-btn_fog.place(x=240,y=414,width=250,height=66)
+image_foglbtn=Image.open(f'./pics/widget_bg/lefoglalasBtn.png')
+img_foglbtn=image_foglbtn.resize((248, 66))
+my_img_foglbtn=ImageTk.PhotoImage(img_foglbtn)
+btn_fog = tk.Button(canvas_4,text="FOGLALÁS",image=my_img_foglbtn,command=dateSelectedVerifier)
+btn_fog["bg"] = "#2694E8"
+btn_fog["activebackground"] = "#2694E8"
+btn_fog["border"] = "0"
+btn_fog.place(x=240,y=420)
 
 img = tk.Label(canvas_4)
 img.place(x=28,y=20,width=245,height=184)
-szobaszam = tk.Label(canvas_4,text="Szobaszám: 420",font="Ariel 13 bold",bg="#8abee6")
+szobaszam = tk.Label(canvas_4,text="Szobaszám: 420",font="Ariel 13 bold",bg="#2694E8")
 szobaszam.place(x=65,y=209,width=160,height=31)
 
-ert_1 = tk.Label(canvas_4,text="Értékelés:",bg="#8abee6",font="Ariel 12 bold")
-ert_2 = tk.Label(canvas_4,text="8.4",bg="#8abee6",font="Ariel 14 bold")
-ert_3 = tk.Label(canvas_4,text="(1254 értékelés)",bg="#8abee6",font="Ariel 10 bold")
+ert_1 = tk.Label(canvas_4,text="Értékelés:",bg="#2694E8",font="Ariel 12 bold")
+ert_2 = tk.Label(canvas_4,text="8.4",bg="#2694E8",font="Ariel 14 bold")
+ert_3 = tk.Label(canvas_4,text="(1254 értékelés)",bg="#2694E8",font="Ariel 10 bold")
 ert_1.place(x=337,y=10)
 ert_2.place(x=357,y=30)
 ert_3.place(x=325,y=54)
 
-kul = tk.Label(canvas_4,text="Különlegességek:",bg="#8abee6",font="Ariel 12")
-kul1 = tk.Label(canvas_4,text="• WC\n• Terasz\n• Kilátás\n• Hangszigetelt ablakok\n• Minibár",bg="#8abee6",font="Ariel 12 italic")
+kul = tk.Label(canvas_4,text="Különlegességek:",bg="#2694E8",font="Ariel 12")
+kul1 = tk.Label(canvas_4,text="• WC\n• Terasz\n• Kilátás\n• Hangszigetelt ablakok\n• Minibár",bg="#2694E8",font="Ariel 12 italic")
 kul.place(x=320,y=85)
 kul1.place(x=278,y=106,width=200,height=110)
 #endregion
 
 #region Saját fiók képernyő
 c_x4 = -500
-canvas_5 = tk.Canvas(main,bg="#8abee6",width=500,height=500)
+canvas_5 = tk.Canvas(main,bg="#2694E8",width=500,height=500)
 canvas_5.place(x=-500,y=0)
 
 canvas_foglist = tk.Canvas(canvas_5)
@@ -458,31 +467,34 @@ image=Image.open(f'./pics/profpicround.jpg')
 img_prof=image.resize((80, 80))
 my_img=ImageTk.PhotoImage(img_prof)
 pic_label = tk.Label(canvas_5,image=my_img)
-pic_label["bg"] = "#8abee6"
-pic_label["activebackground"] = "#8abee6"
+pic_label["bg"] = "#2694E8"
+pic_label["activebackground"] = "#2694E8"
 pic_label["border"] = "0"
 pic_label.place(x=170,y=10,width=80,height=80)
 
-label_nev = tk.Label(canvas_5,text="Tesztt",font="Ariel 22",bg="#8abee6")
+label_nev = tk.Label(canvas_5,text="Tesztt",font="Ariel 22 bold",bg="#2694E8")
 label_nev.place(x=260,y=35)
 
-label_fogl = tk.Label(canvas_5,text="Foglalások:",font="Ariel 15",bg="#8abee6")
+label_fogl = tk.Label(canvas_5,text="Foglalások:",font="Ariel 15 bold",bg="#2694E8")
 label_fogl.place(x=30,y=110)
 
-btn2 = tk.Button(canvas_5,text="Vissza",command=SlideBackProfile)
-btn2.place(x=190,y=440,width=120,height=40)
+btn2 = tk.Button(canvas_5,text="Vissza",image=my_img_backbtn,command=SlideBackProfile)
+btn2["bg"] = "#2694E8"
+btn2["activebackground"] = "#2694E8"
+btn2["border"] = "0"
+btn2.place(x=170,y=420)
 
 v = tk.Scrollbar(canvas_foglist)
 v.pack(side = "right", fill = "y")
 t = tk.Text(canvas_foglist, width = 30, height = 17, wrap = "none",
-yscrollcommand = v.set,bg="#8abee6")
+yscrollcommand = v.set,bg="#2694E8")
 van_ilyen = False
 t.tag_configure("center", justify='center')
 t.tag_add("center", 1.0, "end")
 t.config(state="disabled")
 t.pack(side="top", fill="x")
 v.config(command=t.yview)
-canvas_foglist["bg"] = "#8abee6"
+canvas_foglist["bg"] = "#2694E8"
 canvas_foglist.place(x=25,y=150,width=470,height=250)
 #endregion
 
