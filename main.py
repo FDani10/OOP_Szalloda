@@ -11,6 +11,11 @@ import ctypes
 
 main = tk.Tk()
 main.geometry("500x500")
+main.resizable(False, False)
+main.title("Szobafoglaló")
+ico = Image.open('./pics/hotelicon.ico')
+photo = ImageTk.PhotoImage(ico)
+main.wm_iconphoto(False, photo)
 
 egyagyasSzobak, ketagyasSzobak, szallodak, foglalasok, felhasznalok = upload()
 
