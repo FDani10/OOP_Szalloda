@@ -3,8 +3,12 @@ Az alábbi program az "Objektum orientált programozás" órára készült.
 
 A programban szállodák szobáit lehet lefoglalni adott napokra.
 
+A program teljes része Python nyelvben íródott. (A GitHub azért írja, hogy nagyrészt TeX programnyelven íródott, mert a futtatható exe fájl létrehozásánál TeX fájlokat használ a 'pyinstaller')
+
 ## Program futtatása
-Ahhoz, hogy a program rendesen fusson szükség lesz az alábbi modulokra:
+A fájlok között található egy _Szobafoglalas.exe_ fájl, ami egyből futtatható anélkül, hogy a felhasználónak bármit is le kéne töltenie.
+
+Ahhoz, hogy a program Visual Studio Code-ban rendesen fusson szükség lesz az alábbi modulokra:
 
 >_tkintermapview_
 
