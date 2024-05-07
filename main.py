@@ -7,6 +7,7 @@ from PIL import Image, ImageTk
 import datetime
 import tkintermapview
 import ctypes
+import babel.numbers
 
 
 main = tk.Tk()
